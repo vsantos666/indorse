@@ -1,6 +1,7 @@
 package indorse.service;
 
 import indorse.bean.Login;
+import indorse.bean.UserDTO;
 import indorse.model.Friend;
 import indorse.model.User;
 
@@ -11,13 +12,13 @@ import java.util.List;
  */
 public interface UserService {
 
-    public String saveUser(User userData, String user);
+    public String saveUser(UserDTO userData, String user);
 
-    public String updateUser(User userData, String user);
+    public String updateUser(UserDTO userData, String user);
 
-    public String deleteUser(User userData, String user);
+    public String deleteUser(UserDTO userData, String user);
 
-    public List<User> getUserByName(String name);
+    public List<UserDTO> getUserByName(String name);
 
     public String userLogin(Login login);
 

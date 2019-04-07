@@ -1,5 +1,6 @@
 package indorse.controllers;
 
+import indorse.bean.FriendDTO;
 import indorse.model.Friend;
 import indorse.service.FriendService;
 import indorse.service.UserService;
@@ -23,7 +24,7 @@ public class FriendController {
     @RequestMapping(path = "", method = RequestMethod.POST)
     public @ResponseBody
     JsonResult addFriend(@RequestHeader("User") String user,@RequestHeader("Token") String token,
-                         @Valid @RequestBody Friend friend) {
+                         @Valid @RequestBody FriendDTO friend) {
         try{
             if(userService.validateToken(token)==null){
                 return new JsonResult(false, null, "Invalid Token");
@@ -42,7 +43,7 @@ public class FriendController {
     @RequestMapping(path = "", method = RequestMethod.DELETE)
     public @ResponseBody
     JsonResult disableFriend(@RequestHeader("User") String user, @RequestHeader("Token") String token,
-                             @Valid @RequestBody Friend friend) {
+                             @Valid @RequestBody FriendDTO friend) {
         try{
             if(userService.validateToken(token)==null){
                 return new JsonResult(false, null, "Invalid Token");

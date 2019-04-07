@@ -1,6 +1,7 @@
 package indorse.service.impl;
 
 import indorse.bean.Login;
+import indorse.bean.UserDTO;
 import indorse.model.Friend;
 import indorse.model.User;
 import indorse.model.UserToken;
@@ -8,6 +9,7 @@ import indorse.repositories.FriendRepository;
 import indorse.repositories.UserRepository;
 import indorse.repositories.UserTokenRepository;
 import indorse.service.UserService;
+import indorse.utils.MapperUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 /** Toda la logica aqui
@@ -39,14 +42,15 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Method to add a new user
-     * @param usuario
+     * @param usuarioDTO
      * @param user
      * @return una cadena con null si existe error
      */
     @Transactional
     @Override
-    public String saveUser(User usuario, String user) {
+    public String saveUser(UserDTO usuarioDTO, String user) {
         try {
+            User usuario = MapperUtil.mapObject(usuarioDTO, User.class);
             usuario.setCreatedBy(user);
             SecurePassword secure = new SecurePassword();
             String securePassword = secure.getSecurePassword(usuario.getPassword(), "123456789".getBytes());
@@ -60,15 +64,16 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Method to modify an user
-     * @param usuario
+     * @param usuarioDTO
      * @param user
      * @return
      */
     @Transactional
     @Override
-    public String updateUser(User usuario, String user) {
+    public String updateUser(UserDTO usuarioDTO, String user) {
         try {
-            User user1 = userRepository.findOne(usuario.getId());
+            User usuario = MapperUtil.mapObject(usuarioDTO, User.class);
+            User user1 = userRepository.findById((long)usuario.getId());
             if(user1 !=null){
                 user1.setLastName(usuario.getLastName());
                 user1.setName(usuario.getName());
@@ -88,15 +93,15 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Method to delete an User
-     * @param usuario
+     * @param usuarioDTO
      * @param user
      * @return
      */
     @Transactional
     @Override
-    public String deleteUser(User usuario, String user) {
+    public String deleteUser(UserDTO usuarioDTO, String user) {
         try {
-            User user1 = userRepository.findOne(usuario.getId());
+            User user1 = userRepository.findById((long)usuarioDTO.getId());
             if(user1 !=null){
                 user1.setDisabled(true);
                 user1.setUpdatedBy(user);
@@ -115,11 +120,15 @@ public class UserServiceImpl implements UserService {
      * @return List<User> lista de usuarios
      */
     @Override
-    public List<User> getUserByName(String name) {
+    public List<UserDTO> getUserByName(String name) {
         try {
             //Pageable pageable = new  PageRequest(0,2);
             List<User> userList = userRepository.findAllByDisabledAndNameContains(false,name);
-            return userList;
+            List<UserDTO> userDTOList = userList
+                    .stream()
+                    .map(e -> MapperUtil.mapObject(e, UserDTO.class))
+                    .collect(Collectors.toList());
+            return userDTOList;
         } catch (Exception e) {
             return null;
         }

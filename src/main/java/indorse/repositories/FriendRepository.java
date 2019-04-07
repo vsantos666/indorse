@@ -11,4 +11,6 @@ public interface FriendRepository extends JpaRepository<Friend, Long>, PagingAnd
     @Query("SELECT a FROM Friend a WHERE a.userId.id = :userId and a.friendId.id = :friendId ")
     public Friend findUserByUserIdAndFriendId(@Param("userId") Long userId, @Param("friendId") Long friendId);
 
+    public Friend findById(@Param("id") long id);
+
 }

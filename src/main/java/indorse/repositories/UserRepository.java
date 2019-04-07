@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by vsantos on 7/03/2019.
  */
-public interface UserRepository extends JpaRepository<indorse.model.User, Long>,PagingAndSortingRepository<indorse.model.User, Long> {
+public interface UserRepository extends JpaRepository<User, Long>,PagingAndSortingRepository<User, Long> {
 
 
     public List<User> findAllByDisabled(@Param("disabled") boolean disabled, Pageable pageable);
@@ -19,6 +19,8 @@ public interface UserRepository extends JpaRepository<indorse.model.User, Long>,
     public List<User> findAllByDisabledAndNameContains(@Param("disabled") boolean disabled, @Param("name") String name);
 
     public List<User> findAllByLoginAndPassword(@Param("login") String login,@Param("password") String password);
+
+    public User findById(@Param("id") long id);
 
 
 

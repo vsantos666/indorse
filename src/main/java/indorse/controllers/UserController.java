@@ -1,6 +1,7 @@
 package indorse.controllers;
 
 import indorse.bean.Login;
+import indorse.bean.UserDTO;
 import indorse.model.Friend;
 import indorse.model.User;
 import indorse.service.UserService;
@@ -28,7 +29,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody
-    JsonResult adicionarUsuario(@RequestHeader("User") String user, @Valid @RequestBody User usuario) {
+    JsonResult adicionarUsuario(@RequestHeader("User") String user, @Valid @RequestBody UserDTO usuario) {
         try {
             String respuesta = userService.saveUser(usuario, user);
             if (respuesta == null) {
@@ -43,7 +44,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.PUT)
     public @ResponseBody
-    JsonResult modificarUsuario(@RequestHeader("User") String user, @Valid @RequestBody User usuario) {
+    JsonResult modificarUsuario(@RequestHeader("User") String user, @Valid @RequestBody UserDTO usuario) {
          try{
             String respuesta = userService.updateUser(usuario,user);
             if(respuesta == null){
@@ -58,7 +59,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.DELETE)
     public @ResponseBody
-    JsonResult eliminarUsuario(@RequestHeader("User") String user, @Valid @RequestBody User usuario) {
+    JsonResult eliminarUsuario(@RequestHeader("User") String user, @Valid @RequestBody UserDTO usuario) {
         try{
             String respuesta = userService.deleteUser(usuario,user);
             if(respuesta == null){
@@ -79,7 +80,7 @@ public class UserController {
             if(userService.validateToken(token)==null){
                 return new JsonResult(false, null, "Invalid token");
             }
-            List<User> userList = userService.getUserByName(name);
+            List<UserDTO> userList = userService.getUserByName(name);
             if(userList == null){
                 return new JsonResult(false, null, "Error to get the users.");
             }else {
