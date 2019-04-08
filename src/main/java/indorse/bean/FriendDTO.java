@@ -1,5 +1,6 @@
 package indorse.bean;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 public class FriendDTO {
@@ -7,9 +8,11 @@ public class FriendDTO {
     private Long id;
 
     @NotNull
+    @Min(value = 1,message = "UserId Should not be less than 1")
     private Long userId;
 
     @NotNull
+    @Min(value = 1,message = "FriendId Should not be less than 1")
     private Long friendId;
 
     public FriendDTO() {

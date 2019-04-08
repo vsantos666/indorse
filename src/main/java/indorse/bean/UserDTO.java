@@ -1,27 +1,36 @@
 package indorse.bean;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 public class UserDTO {
 
     private Long id;
 
-    @NotNull
+    @NotBlank(message = "Name cannot be null or blank")
+    @Size(min = 2,max = 25,message = "Name must be between 2 and 25 characters")
     private String name;
 
-    @NotNull
+    @NotBlank(message = "Last Name cannot be null or blank")
+    @Size(min = 2,max = 25,message = "Last Name must be between 2 and 25 characters")
     private String lastName;
 
-    @NotNull
+    @NotBlank(message = "Email cannot be null or blank")
+    @Email(message = "Email should be valid")
     private String email;
 
     private Date birthDate;
 
-    @NotNull
+    @NotBlank(message = "Login cannot be null or blank")
+    @Size(min = 6,max = 8,message = "Login must be between 6 and 8 characters")
     private String login;
 
-    @NotNull
+    @NotBlank(message = "Password cannot be null or blank")
+    @Size(min = 6,max = 8,message = "Password must be between 6 and 8 characters")
     private String password;
 
     public UserDTO() {
