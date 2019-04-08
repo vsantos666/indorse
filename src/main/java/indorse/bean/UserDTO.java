@@ -25,8 +25,8 @@ public class UserDTO {
 
     private Date birthDate;
 
-    @NotBlank(message = "Login cannot be null or blank")
-    @Size(min = 6,max = 8,message = "Login must be between 6 and 8 characters")
+    @NotBlank(message = "UserLogin cannot be null or blank")
+    @Size(min = 6,max = 8,message = "UserLogin must be between 6 and 8 characters")
     private String login;
 
     @NotBlank(message = "Password cannot be null or blank")

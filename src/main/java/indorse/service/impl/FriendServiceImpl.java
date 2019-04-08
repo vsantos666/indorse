@@ -39,8 +39,8 @@ public class FriendServiceImpl implements FriendService {
             }
 
             friend.setCreatedBy(user);
-            User user1=userRepository.findById((long)friend.getUserId().getId());
-            User user2=userRepository.findById((long)friend.getFriendId().getId());
+            User user1=userRepository.findById((long)friendDTO.getUserId());
+            User user2=userRepository.findById((long)friendDTO.getFriendId());
             friend.setUserId(user1);
             friend.setFriendId(user2);
             friendRepository.saveAndFlush(friend);

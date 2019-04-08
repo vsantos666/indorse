@@ -1,15 +1,15 @@
 package indorse.bean;
 
-public class Login {
+public class UserLogin {
 
     private String user;
 
     private  String password;
 
-    public Login() {
+    public UserLogin() {
     }
 
-    public Login(String user, String password) {
+    public UserLogin(String user, String password) {
         this.user = user;
         this.password = password;
     }

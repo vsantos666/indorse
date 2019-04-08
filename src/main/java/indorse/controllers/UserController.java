@@ -1,11 +1,9 @@
 package indorse.controllers;
 
-import indorse.bean.Login;
+import indorse.bean.UserLogin;
 import indorse.bean.UserDTO;
-import indorse.model.Friend;
-import indorse.model.User;
 import indorse.service.UserService;
-import indorse.utils.JsonResult;
+import indorse.bean.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by vsantos on 7/03/2019.
@@ -29,7 +28,7 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody
-    JsonResult adicionarUsuario(@RequestHeader("User") String user, @Valid @RequestBody UserDTO usuario) {
+    JsonResult addUser(@RequestHeader("User") String user, @Valid @RequestBody UserDTO usuario) {
         try {
             String respuesta = userService.saveUser(usuario, user);
             if (respuesta == null) {
@@ -46,11 +45,11 @@ public class UserController {
     public @ResponseBody
     JsonResult modificarUsuario(@RequestHeader("User") String user, @Valid @RequestBody UserDTO usuario) {
          try{
-            String respuesta = userService.updateUser(usuario,user);
-            if(respuesta == null){
+            String result = userService.updateUser(usuario,user);
+            if(result == null){
                 return new JsonResult(true, null, "Successful update.");
             }else {
-                return new JsonResult(false, null, respuesta);
+                return new JsonResult(false, null, result);
             }
         }catch (Exception ex){
             return new JsonResult(false, null, ex.getMessage());
@@ -59,28 +58,28 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.DELETE)
     public @ResponseBody
-    JsonResult eliminarUsuario(@RequestHeader("User") String user, @Valid @RequestBody UserDTO usuario) {
+    JsonResult deleteUser(@RequestHeader("User") String user, @Valid @RequestBody UserDTO usuario) {
         try{
-            String respuesta = userService.deleteUser(usuario,user);
-            if(respuesta == null){
+            String result = userService.deleteUser(usuario,user);
+            if(result == null){
                 return new JsonResult(true, null, "Successful delete.");
             }else {
-                return new JsonResult(false, null, respuesta);
+                return new JsonResult(false, null, result);
             }
         }catch (Exception ex){
             return new JsonResult(false, null, ex.getMessage());
         }
     }
 
-    @RequestMapping(path = "/{name}",method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
-    JsonResult otenerUsuarioS(@RequestHeader("User") String user,@RequestHeader("Token") String token,
-                              @PathVariable String name) {
+    JsonResult getUser(@RequestHeader("User") String user,@RequestHeader("Token") String token,
+                       @RequestParam Map<String, Object> map) {
         try{
             if(userService.validateToken(token)==null){
                 return new JsonResult(false, null, "Invalid token");
             }
-            List<UserDTO> userList = userService.getUserByName(name);
+            List<UserDTO> userList = userService.getUserByName(map);
             if(userList == null){
                 return new JsonResult(false, null, "Error to get the users.");
             }else {
@@ -93,9 +92,9 @@ public class UserController {
 
     @RequestMapping(path = "/login",method = RequestMethod.POST)
     public @ResponseBody
-    JsonResult userLogin(@Valid @RequestBody Login login) {
+    JsonResult userLogin(@Valid @RequestBody UserLogin userLogin) {
         try{
-            String respuesta = userService.userLogin(login);
+            String respuesta = userService.userLogin(userLogin);
             if(respuesta != null ){
                 return new JsonResult(true, respuesta, "Success");
             }else {

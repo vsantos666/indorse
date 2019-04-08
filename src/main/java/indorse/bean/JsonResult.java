@@ -1,4 +1,4 @@
-package indorse.utils;
+package indorse.bean;
 
 /**
  * Created by vsantos on 7/03/2019.

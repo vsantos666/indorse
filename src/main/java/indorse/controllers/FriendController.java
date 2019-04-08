@@ -1,10 +1,9 @@
 package indorse.controllers;
 
 import indorse.bean.FriendDTO;
-import indorse.model.Friend;
 import indorse.service.FriendService;
 import indorse.service.UserService;
-import indorse.utils.JsonResult;
+import indorse.bean.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,11 +28,11 @@ public class FriendController {
             if(userService.validateToken(token)==null){
                 return new JsonResult(false, null, "Invalid Token");
             }
-            String respuesta = friendService.addFriend(friend,user);
-            if(respuesta == null ){
+            String result = friendService.addFriend(friend,user);
+            if(result == null ){
                 return new JsonResult(true, null, "Successful Create.");
             }else {
-                return new JsonResult(false, null, respuesta);
+                return new JsonResult(false, null, result);
             }
         }catch (Exception ex){
             return new JsonResult(false, null, ex.getMessage());
@@ -48,11 +47,11 @@ public class FriendController {
             if(userService.validateToken(token)==null){
                 return new JsonResult(false, null, "Invalid Token");
             }
-            String respuesta = friendService.disableFriend(friend,user);
-            if(respuesta == null ){
+            String result = friendService.disableFriend(friend,user);
+            if(result == null ){
                 return new JsonResult(true, null, "Successful Delete.");
             }else {
-                return new JsonResult(false, null, respuesta);
+                return new JsonResult(false, null, result);
             }
         }catch (Exception ex){
             return new JsonResult(false, null, ex.getMessage());

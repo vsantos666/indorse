@@ -22,7 +22,7 @@ On a Postgress DataBase run the nexts Scripts:
 "name":"Raul",
 "lastName":"Gongora",
 "email":"rgongora@gmail.com",
-"login":"rgongora",
+"userLogin":"rgongora",
 "password":"123456"
 }
 ------------------------------
@@ -30,11 +30,11 @@ On a Postgress DataBase run the nexts Scripts:
 "name":"Mijael",
 "lastName":"Salinas",
 "email":"msalinas@gmail.com",
-"login":"msalinas",
+"userLogin":"msalinas",
 "password":"msalinas"
 }
-//the login method POST
-    http://localhost:8080/b-profile/api/user/login
+//the userLogin method POST
+    http://localhost:8080/b-profile/api/user/userLogin
 // the body examples:
 {
 "user":"msalinas",
@@ -53,9 +53,9 @@ On a Postgress DataBase run the nexts Scripts:
 http://localhost:8080/b-profile/api/friend
 // the body examples:
 {
-"userId":{"id":1},
-"friendId":{"id":2}
+"userId":1,
+"friendId":2
 }
 //the method to search GET
-http://localhost:8080/b-profile/api/user/Mija
+http://localhost:8080/b-profile/api/user?name=o&page=0&size=1
 

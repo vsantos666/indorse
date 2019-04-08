@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long>,PagingAndSorti
 
     public List<User> findAllByDisabled(@Param("disabled") boolean disabled, Pageable pageable);
 
-    public List<User> findAllByDisabledAndNameContains(@Param("disabled") boolean disabled, @Param("name") String name);
+    public List<User> findAllByDisabledAndNameContains(@Param("disabled") boolean disabled, @Param("name") String name, Pageable pageable);
 
     public List<User> findAllByLoginAndPassword(@Param("login") String login,@Param("password") String password);
 

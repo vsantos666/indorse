@@ -1,11 +1,9 @@
 package indorse.service.impl;
 
-import indorse.bean.Login;
+import indorse.bean.UserLogin;
 import indorse.bean.UserDTO;
-import indorse.model.Friend;
 import indorse.model.User;
 import indorse.model.UserToken;
-import indorse.repositories.FriendRepository;
 import indorse.repositories.UserRepository;
 import indorse.repositories.UserTokenRepository;
 import indorse.service.UserService;
@@ -19,14 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import indorse.utils.SecurePassword;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
-/** Toda la logica aqui
+/**
  * Created by vsantos on 7/03/2019.
  */
 @Service
@@ -42,20 +37,20 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Method to add a new user
-     * @param usuarioDTO
+     * @param userDTO
      * @param user
      * @return una cadena con null si existe error
      */
     @Transactional
     @Override
-    public String saveUser(UserDTO usuarioDTO, String user) {
+    public String saveUser(UserDTO userDTO, String user) {
         try {
-            User usuario = MapperUtil.mapObject(usuarioDTO, User.class);
-            usuario.setCreatedBy(user);
+            User user1 = MapperUtil.mapObject(userDTO, User.class);
+            user1.setCreatedBy(user);
             SecurePassword secure = new SecurePassword();
-            String securePassword = secure.getSecurePassword(usuario.getPassword(), "123456789".getBytes());
-            usuario.setPassword(securePassword);
-            userRepository.saveAndFlush(usuario);
+            String securePassword = secure.getSecurePassword(user1.getPassword(), "123456789".getBytes());
+            user1.setPassword(securePassword);
+            userRepository.saveAndFlush(user1);
             return null;
         } catch (Exception e) {
             return e.getMessage();
@@ -64,15 +59,15 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Method to modify an user
-     * @param usuarioDTO
+     * @param userDTO
      * @param user
      * @return
      */
     @Transactional
     @Override
-    public String updateUser(UserDTO usuarioDTO, String user) {
+    public String updateUser(UserDTO userDTO, String user) {
         try {
-            User usuario = MapperUtil.mapObject(usuarioDTO, User.class);
+            User usuario = MapperUtil.mapObject(userDTO, User.class);
             User user1 = userRepository.findById((long)usuario.getId());
             if(user1 !=null){
                 user1.setLastName(usuario.getLastName());
@@ -83,7 +78,7 @@ public class UserServiceImpl implements UserService {
                 userRepository.save(user1);
                 return null;
             }else{
-                return "No se encontro el registro";
+                return "There is no User";
             }
         } catch (Exception e) {
             return e.getMessage();
@@ -93,22 +88,22 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Method to delete an User
-     * @param usuarioDTO
+     * @param userDTO
      * @param user
      * @return
      */
     @Transactional
     @Override
-    public String deleteUser(UserDTO usuarioDTO, String user) {
+    public String deleteUser(UserDTO userDTO, String user) {
         try {
-            User user1 = userRepository.findById((long)usuarioDTO.getId());
+            User user1 = userRepository.findById((long)userDTO.getId());
             if(user1 !=null){
                 user1.setDisabled(true);
                 user1.setUpdatedBy(user);
                 userRepository.saveAndFlush(user1);
                 return null;
             }else{
-                return "No se encontro el registro";
+                return "There is no User";
             }
         } catch (Exception e) {
             return e.getMessage();
@@ -120,10 +115,10 @@ public class UserServiceImpl implements UserService {
      * @return List<User> lista de usuarios
      */
     @Override
-    public List<UserDTO> getUserByName(String name) {
+    public List<UserDTO> getUserByName(Map<String, Object> map) {
         try {
-            //Pageable pageable = new  PageRequest(0,2);
-            List<User> userList = userRepository.findAllByDisabledAndNameContains(false,name);
+            Pageable pageable = new PageRequest(Integer.parseInt(map.get("page").toString()),Integer.parseInt(map.get("size").toString()));
+            List<User> userList = userRepository.findAllByDisabledAndNameContains(false,map.get("name").toString(),pageable);
             List<UserDTO> userDTOList = userList
                     .stream()
                     .map(e -> MapperUtil.mapObject(e, UserDTO.class))
@@ -134,13 +129,18 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Method to get the secure token
+     * @param userLogin
+     * @return
+     */
     @Transactional
     @Override
-    public String userLogin(Login login) {
+    public String userLogin(UserLogin userLogin) {
         try {
             SecurePassword secure = new SecurePassword();
-            String securePassword = secure.getSecurePassword(login.getPassword(), "123456789".getBytes());
-            List<User> userList = userRepository.findAllByLoginAndPassword(login.getUser(),securePassword);
+            String securePassword = secure.getSecurePassword(userLogin.getPassword(), "123456789".getBytes());
+            List<User> userList = userRepository.findAllByLoginAndPassword(userLogin.getUser(),securePassword);
             if(userList!= null && userList.size()>0){
                 String token = UUID.randomUUID().toString();
              for(User user:userList){
@@ -162,6 +162,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Method to validate if the toke is alive
+     * @param token
+     * @return
+     */
     @Transactional
     @Override
     public String validateToken(String token) {
